@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  fastapi:
+    container_name: "fast_filer_container"
+    build:
+      context: ..
+      dockerfile: fast_filer/fastapi.Dockerfile
+    environment:
+      - MODULE_NAME=main
+      - VARIABLE_NAME=app
+      - ASGI_SERVER=uvicorn
+      - UVICORN_CMD="uvicorn main:app --host 0.0.0.0 --port 80 --workers 4"
+      - GUNICORN_CMD="gunicorn -k uvicorn.workers.UvicornWorker -w 4 main:app -b 0.0.0.0:80"
+    restart: always
+    networks:
+      - localhost-network
+    volumes:
+      - D:\Code\upload_folder\documents:/documents
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: fast_filer/nginx.Dockerfile
+    container_name: nginx_fast_filer_container
+    ports:
+      # Port FastAPI
+      - "9988:80"
+    restart: always
+    networks:
+      - localhost-network
+
+volumes:
+  nginx_data:
+
+
+networks:
+  localhost-network:
+    driver: bridge

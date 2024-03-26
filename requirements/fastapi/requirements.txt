@@ -1,0 +1,8 @@
+fastapi==0.110.0
+pydantic==2.5.3
+SQLAlchemy==2.0.24
+sqlmodel==0.0.14
+uvicorn==0.25.0
+pydantic-settings
+asyncpg
+python-multipart
